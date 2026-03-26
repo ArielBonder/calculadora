@@ -1,0 +1,407 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Tromppo - Diagnóstico de Recaudación</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
+
+  <style>
+    body { font-family: 'Inter', sans-serif; background-color: #fff; }
+    .bg-tromppo { background-color: #0474f4; }
+    .text-tromppo { color: #0474f4; }
+    .border-tromppo { border-color: #0474f4; }
+    .step-content { display: none; }
+    .step-content.active { display: block; }
+    
+    input[type="text"], input[type="email"], input[type="number"], input[type="tel"] {
+      border: 1px solid #e5e7eb; padding: 12px; border-radius: 12px; width: 100%; margin-top: 6px;
+    }
+    input:invalid.attempted { border-color: #ef4444; }
+    
+    .method-card { border: 1px solid #e5e7eb; padding: 16px; border-radius: 16px; margin-bottom: 12px; }
+    .method-card:has(input[type="checkbox"]:checked) { border-color: #0474f4; background-color: #f0f7ff; }
+    
+    .progress-bar { height: 6px; background: #f3f4f6; border-radius: 10px; overflow: hidden; }
+    .progress-fill { height: 100%; background: #0474f4; transition: width 0.4s ease; }
+    
+    .radio-label { display: flex; align-items: center; padding: 16px; border: 1px solid #e5e7eb; border-radius: 16px; cursor: pointer; margin-bottom: 10px; }
+    
+    .btn-shine { position: relative; overflow: hidden; }
+    .btn-shine::after {
+      content: ""; position: absolute; top: -50%; left: -100%; width: 200%; height: 200%;
+      background: rgba(255,255,255,0.2); transform: rotate(45deg); transition: 0.5s;
+    }
+    .btn-shine:hover::after { left: 100%; }
+  </style>
+</head>
+<body>
+
+  <div id="landing-page" class="min-h-screen bg-white text-black">
+    <header class="flex justify-between items-center px-8 py-6 max-w-7xl mx-auto">
+      <div class="flex items-center gap-2">
+        <img src="https://i.ibb.co/G4ykLMLw/Logo-Tromppo.png" alt="Tromppo Logo" style="height: 300px; width: auto;">
+      </div>
+      <button class="border border-black px-6 py-2 rounded-full font-semibold hover:bg-black hover:text-white transition">
+        Acceso Clientes
+      </button>
+    </header>
+
+    <section class="text-center px-4 py-16 max-w-4xl mx-auto">
+      <h1 class="text-4xl md:text-5xl font-bold leading-tight mb-6 text-balance">
+        ¿Cuánto dinero está perdiendo su Universidad por <span class="text-tromppo">procesos de cobranza obsoletos?</span>
+      </h1>
+      <p class="text-gray-600 text-lg mb-10">
+        Analizamos los datos del sector educativo en Perú para que descubras el potencial de optimización de tu institución.
+      </p>
+    </section>
+
+    <section class="max-w-6xl mx-auto px-4 mb-20">
+      <div class="grid grid-cols-1 md:grid-cols-4 gap-6">
+        <div class="bg-white p-8 rounded-2xl border-t-4 border-tromppo shadow-xl">
+          <div class="text-tromppo mb-4"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg></div>
+          <div class="text-3xl font-bold mb-1">+2.1M</div>
+          <div class="text-gray-500 text-sm leading-snug">Estudiantes en Educación Superior</div>
+        </div>
+        <div class="bg-white p-8 rounded-2xl border-t-4 border-tromppo shadow-xl">
+          <div class="text-tromppo mb-4"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 10v6M2 10l10-5 10 5-10 5z"/><path d="M6 12v5c3 3 9 3 12 0v-5"/></svg></div>
+          <div class="text-3xl font-bold mb-1">97</div>
+          <div class="text-gray-500 text-sm leading-snug">Universidades Licenciadas</div>
+        </div>
+        <div class="bg-white p-8 rounded-2xl border-t-4 border-tromppo shadow-xl">
+          <div class="text-tromppo mb-4"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="7" width="20" height="14" rx="2" ry="2"/><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/></svg></div>
+          <div class="text-3xl font-bold mb-1">373</div>
+          <div class="text-gray-500 text-sm leading-snug">IES Licenciados en Perú</div>
+        </div>
+        <div class="bg-white p-8 rounded-2xl border-t-4 border-tromppo shadow-xl">
+          <div class="text-tromppo mb-4"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg></div>
+          <div class="text-3xl font-bold mb-1">S/ 111k M</div>
+          <div class="text-gray-500 text-sm leading-snug">Brecha de Infraestructura</div>
+        </div>
+      </div>
+      <p class="text-center text-gray-400 text-xs mt-8 italic">Este diagnóstico se construye con datos públicos de SUNEDU, MINEDU (ESCALE) e INEI actualizados al 2024-2025.</p>
+    </section>
+
+    <section class="bg-gray-50 py-16 text-center">
+      <div class="max-w-2xl mx-auto px-4">
+        <h3 class="text-2xl font-bold mb-6 text-balance">¿Quiere saber cuál es el impacto financiero en su propia institución?</h3>
+        <button onclick="startQuiz()" class="bg-tromppo text-white text-lg font-bold px-10 py-4 rounded-full hover:scale-105 transition-transform shadow-lg btn-shine">
+          REALIZAR DIAGNÓSTICO GRATUITO
+        </button>
+      </div>
+    </section>
+  </div>
+
+  <div id="quiz-container" class="hidden min-h-screen pb-20">
+    <header class="flex justify-between items-center px-10 py-6 max-w-7xl mx-auto border-b border-gray-50">
+      <div class="flex items-center gap-3">
+        <img src="https://i.ibb.co/G4ykLMLw/Logo-Tromppo.png" alt="Tromppo Logo" style="height: 300px; width: auto;">
+      </div>
+      <div id="step-counter" class="text-[10px] font-bold text-gray-400 uppercase tracking-widest">Paso 1 de 8</div>
+    </header>
+
+    <main class="max-w-2xl mx-auto mt-10 px-6">
+      <div id="progress-container" class="mb-12">
+        <div class="progress-bar"><div id="progress" class="progress-fill" style="width: 12.5%;"></div></div>
+      </div>
+
+      <form id="quiz-form">
+        <div class="step-content active" id="step-1">
+          <h2 class="text-3xl font-extrabold mb-8 italic text-tromppo">Datos del responsable</h2>
+          <div class="grid grid-cols-2 gap-x-4 gap-y-5">
+            <div><label class="text-[10px] font-bold uppercase text-gray-400">Nombre *</label><input type="text" id="nombre" placeholder="Juan" required></div>
+            <div><label class="text-[10px] font-bold uppercase text-gray-400">Apellidos *</label><input type="text" id="apellido" placeholder="Pérez" required></div>
+            <div class="col-span-2"><label class="text-[10px] font-bold uppercase text-gray-400">Universidad o Institución *</label><input type="text" id="institucion" placeholder="Ej. Universidad de Lima" required></div>
+            <div><label class="text-[10px] font-bold uppercase text-gray-400">Email Institucional *</label><input type="email" id="email" placeholder="j.perez@edu.pe" required></div>
+            <div><label class="text-[10px] font-bold uppercase text-gray-400">Teléfono / WhatsApp *</label><input type="tel" id="telefono" placeholder="987 654 321" required></div>
+          </div>
+        </div>
+
+        <div class="step-content" id="step-2">
+          <h2 class="text-3xl font-extrabold mb-6 italic text-tromppo">Transaccionalidad</h2>
+          <div class="space-y-4">
+            <div><label class="text-sm font-bold">¿Cuántas transacciones de pago reciben al mes?</label><input type="number" id="trans_mes" placeholder="0"></div>
+            <div><label class="text-sm font-bold">¿Cuál es el monto promedio por transacción en S/?</label><input type="number" id="monto_prom" placeholder="S/ 0.00"></div>
+            <div class="bg-gray-50 p-6 rounded-2xl">
+              <label class="text-sm font-bold mb-4 block">¿Qué porcentaje de pagos entran a tiempo?</label>
+              <div class="flex items-center gap-6">
+                 <input type="range" id="moraRange" class="flex-1 accent-[#0474f4]" min="0" max="100" value="80" oninput="moraInput.value = this.value">
+                 <input type="number" id="moraInput" class="w-20 font-bold text-center text-tromppo" value="80" oninput="moraRange.value = this.value">
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="step-content" id="step-3">
+          <h2 class="text-2xl font-extrabold mb-6 italic text-tromppo text-pretty">¿Qué métodos de pago ofrecen actualmente?</h2>
+          <div class="space-y-3 overflow-y-auto max-h-[400px] pr-2">
+            <div class="method-card">
+              <label class="flex items-center gap-3 font-bold text-sm"><input type="checkbox" class="w-5 h-5 accent-[#0474f4]"> Cuenta recaudadora de bancos</label>
+              <div class="grid grid-cols-2 gap-4 mt-3 text-[10px] uppercase text-gray-400">
+                <div>% Uso<input type="number" class="metodo-uso" placeholder="0%"></div>
+                <div>Costo Fijo (S/)<input type="number" class="metodo-costo" placeholder="S/ 0.00"></div>
+              </div>
+            </div>
+            <div class="method-card">
+              <label class="flex items-center gap-3 font-bold text-sm"><input type="checkbox" class="w-5 h-5 accent-[#0474f4]"> Tarjetas Online</label>
+              <div class="grid grid-cols-2 gap-4 mt-3 text-[10px] uppercase text-gray-400">
+                <div>% Uso<input type="number" class="metodo-uso" placeholder="0%"></div>
+                <div>Costo (%)<input type="number" class="metodo-costo-var" placeholder="0.00%"></div>
+              </div>
+            </div>
+            <div class="method-card">
+              <label class="flex items-center gap-3 font-bold text-sm"><input type="checkbox" class="w-5 h-5 accent-[#0474f4]"> Yape / Plin</label>
+              <div class="grid grid-cols-2 gap-4 mt-3 text-[10px] uppercase text-gray-400">
+                <div>% Uso<input type="number" class="metodo-uso" placeholder="0%"></div>
+                <div>Costo Fijo o %<input type="number" class="metodo-costo" placeholder="0.00"></div>
+              </div>
+            </div>
+            <div class="method-card">
+              <label class="flex items-center gap-3 font-bold text-sm"><input type="checkbox" class="w-5 h-5 accent-[#0474f4]"> Pago Presencial en caja</label>
+              <div class="grid grid-cols-2 gap-4 mt-3 text-[10px] uppercase text-gray-400">
+                <div>% Uso<input type="number" class="metodo-uso" placeholder="0%"></div>
+                <div>Costo Fijo (S/)<input type="number" class="metodo-costo" placeholder="S/ 0.00"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="step-content" id="step-4">
+          <h2 class="text-2xl font-extrabold mb-6 italic text-tromppo">¿Cómo realizan la conciliación?</h2>
+          <div class="space-y-2">
+            <label class="radio-label"><input type="radio" name="concil" class="mr-4"> 100% manual en excel</label>
+            <label class="radio-label"><input type="radio" name="concil" class="mr-4"> Semi-automatizado</label>
+            <label class="radio-label"><input type="radio" name="concil" class="mr-4"> Mayormente automatizado</label>
+            <label class="radio-label"><input type="radio" name="concil" class="mr-4"> Totalmente automatizado</label>
+          </div>
+        </div>
+
+        <div class="step-content" id="step-5">
+          <h2 class="text-2xl font-extrabold mb-4 italic text-tromppo">Personal de gestión</h2>
+          <p class="text-sm font-bold mb-4">¿Cuántas personas se dedican a cobranza y conciliación?</p>
+          <input type="number" id="staff_count" placeholder="Ej. 3" class="text-3xl font-black border-b-2 border-tromppo outline-none">
+        </div>
+
+        <div class="step-content" id="step-6">
+          <h2 class="text-2xl font-extrabold mb-6 italic text-tromppo text-pretty">¿Tienen visibilidad en tiempo real?</h2>
+          <div class="space-y-2">
+            <label class="radio-label"><input type="radio" name="vis" class="mr-4"> No, revisamos manualmente</label>
+            <label class="radio-label"><input type="radio" name="vis" class="mr-4"> Parcial, con retrasos</label>
+            <label class="radio-label"><input type="radio" name="vis" class="mr-4"> Si, pero con múltiples sistemas</label>
+            <label class="radio-label"><input type="radio" name="vis" class="mr-4"> Si, dashboard unificado</label>
+          </div>
+        </div>
+
+        <div class="step-content" id="step-7">
+          <h2 class="text-2xl font-extrabold mb-6 italic text-tromppo">Experiencia de Pago</h2>
+          <div class="space-y-2 text-sm">
+            <label class="flex items-center gap-3 p-3 border rounded-xl"><input type="checkbox"> Consulta de deudas en línea</label>
+            <label class="flex items-center gap-3 p-3 border rounded-xl"><input type="checkbox"> Portal centralizado único</label>
+            <label class="flex items-center gap-3 p-3 border rounded-xl"><input type="checkbox"> Priorización de métodos de bajo costo</label>
+            <label class="flex items-center gap-3 p-3 border rounded-xl"><input type="checkbox"> Confirmación instantánea</label>
+            <label class="flex items-center gap-3 p-3 border rounded-xl"><input type="checkbox"> Recordatorios automáticos</label>
+            <label class="flex items-center gap-3 p-3 border rounded-xl"><input type="checkbox"> Optimizado para móviles</label>
+          </div>
+        </div>
+
+        <div class="step-content" id="step-8">
+          <div class="bg-slate-950 text-white p-8 rounded-[32px] mb-8 relative overflow-hidden text-center">
+            <h3 id="res_inst" class="text-4xl font-black italic mb-6">...</h3>
+            <div class="bg-tromppo inline-block p-5 rounded-3xl shadow-xl shadow-blue-900/20">
+              <div id="res_score" class="text-5xl font-black text-white">--</div>
+              <div class="text-[9px] uppercase mt-2 text-blue-100">Score de Eficiencia</div>
+            </div>
+          </div>
+
+          <div class="grid grid-cols-3 gap-4 mb-8">
+            <div class="bg-white p-4 rounded-3xl border border-gray-100 text-center shadow-sm">
+              <div class="text-gray-400 text-[9px] font-bold uppercase">Cartera Total</div>
+              <div id="res_total" class="text-xl font-black italic text-slate-800">S/ 0</div>
+            </div>
+            <div class="bg-white p-4 rounded-3xl border-l-4 border-blue-400 text-center shadow-sm">
+              <div class="text-tromppo text-[9px] font-bold uppercase">Recaudado</div>
+              <div id="res_tiempo" class="text-xl font-black italic">S/ 0</div>
+            </div>
+            <div class="bg-white p-4 rounded-3xl border-l-4 border-slate-300 text-center shadow-sm">
+              <div class="text-slate-500 text-[9px] font-bold uppercase">Vencido</div>
+              <div id="res_vencida" class="text-xl font-black italic">S/ 0</div>
+            </div>
+          </div>
+
+          <div class="grid grid-cols-1 gap-4 mb-8">
+            <div class="bg-blue-50/50 p-6 rounded-3xl flex justify-between items-center border border-blue-100">
+               <div><div class="text-3xl font-black text-slate-700" id="res_costo_p">S/ 0</div><div class="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Costo mensual de personal</div></div>
+               <div class="text-right"><div class="text-2xl font-black text-tromppo italic" id="res_ahorro_p">S/ 0</div><div class="text-[10px] font-bold text-tromppo uppercase">Ahorro Staff</div></div>
+            </div>
+            <div class="bg-blue-50/50 p-6 rounded-3xl flex justify-between items-center border border-blue-100">
+               <div><div class="text-3xl font-black text-slate-700" id="res_vencida_actual">S/ 0</div><div class="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Cartera Vencida Actual</div></div>
+               <div class="text-right"><div class="text-2xl font-black text-tromppo italic" id="res_recupero_mora">S/ 0</div><div class="text-[10px] font-bold text-tromppo uppercase">Recuperado a tiempo</div></div>
+            </div>
+            <div class="bg-blue-50/50 p-6 rounded-3xl flex justify-between items-center border border-blue-100">
+               <div><div class="text-3xl font-black text-slate-700" id="res_costo_proc_actual">S/ 0</div><div class="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Costo Procesamiento Actual</div></div>
+               <div class="text-right"><div class="text-2xl font-black text-tromppo italic" id="res_ahorro_comision">S/ 0</div><div class="text-[10px] font-bold text-tromppo uppercase">Ahorro en Comisiones</div></div>
+            </div>
+          </div>
+
+          <div class="bg-tromppo p-8 rounded-[32px] text-white text-center shadow-2xl mb-8">
+             <p class="text-xs font-bold uppercase tracking-widest mb-2 opacity-80">Impacto Mensual Recuperado</p>
+             <div id="res_final" class="text-5xl font-black italic tracking-tighter mb-4">S/ 0.00</div>
+          </div>
+
+          <button type="button" onclick="window.location.href='https://calendly.com/ariel-tromppo/30min'" class="w-full btn-shine bg-black text-white py-5 rounded-full font-black uppercase text-xs tracking-widest shadow-xl">
+             Contactar con un asesor
+          </button>
+        </div>
+
+        <div class="mt-12 flex gap-4" id="nav-btns">
+          <button type="button" id="prevBtn" class="flex-1 border-2 border-black py-4 rounded-full font-bold uppercase text-[10px] hidden">Anterior</button>
+          <button type="button" id="nextBtn" class="flex-[2] bg-tromppo text-white py-4 rounded-full font-bold uppercase text-[10px] shadow-lg">Siguiente</button>
+        </div>
+      </form>
+    </main>
+  </div>
+
+  <script>
+    let step = 1;
+    const total = 8;
+    
+    function startQuiz() {
+      document.getElementById('landing-page').classList.add('hidden');
+      document.getElementById('quiz-container').classList.remove('hidden');
+      window.scrollTo(0,0);
+    }
+
+    const nextBtn = document.getElementById('nextBtn');
+    const prevBtn = document.getElementById('prevBtn');
+
+    nextBtn.onclick = () => {
+      if (step === 1) {
+        const inputs = document.querySelectorAll('#step-1 input[required]');
+        let valid = true;
+        inputs.forEach(input => { if (!input.value) { valid = false; input.classList.add('attempted'); } });
+        if (!valid) return;
+      }
+      if (step < total) {
+        document.getElementById('step-' + step).classList.remove('active');
+        step++;
+        document.getElementById('step-' + step).classList.add('active');
+        update();
+        if(step === 8) {
+            calculate();
+            enviarDatosAriel();
+        }
+      }
+    };
+
+    prevBtn.onclick = () => {
+      if (step > 1) {
+        document.getElementById('step-' + step).classList.remove('active');
+        step--;
+        document.getElementById('step-' + step).classList.add('active');
+        update();
+      }
+    };
+
+    function update() {
+      const prg = (step / total) * 100;
+      document.getElementById('progress').style.width = prg + '%';
+      document.getElementById('step-counter').innerText = `Paso ${step} de ${total}`;
+      prevBtn.classList.toggle('hidden', step === 1);
+      if(step === 8) document.getElementById('nav-btns').classList.add('hidden');
+    }
+
+    function calculate() {
+      const inst = document.getElementById('institucion').value || "Su Institución";
+      const trans = parseFloat(document.getElementById('trans_mes').value) || 0;
+      const monto = parseFloat(document.getElementById('monto_prom').value) || 0;
+      const t_pago = parseFloat(document.getElementById('moraInput').value) / 100;
+      const staff = parseFloat(document.getElementById('staff_count').value) || 0;
+
+      let c_proc_actual = 0;
+      document.querySelectorAll('.method-card').forEach(m => {
+        if(m.querySelector('input[type="checkbox"]').checked) {
+          const uso = parseFloat(m.querySelector('.metodo-uso').value || 0) / 100;
+          const cF = parseFloat(m.querySelector('.metodo-costo')?.value || 0);
+          const cV = parseFloat(m.querySelector('.metodo-costo-var')?.value || 0) / 100;
+          c_proc_actual += ((trans * uso) * cF) + ((trans * monto * uso) * cV);
+        }
+      });
+
+      const total_c = trans * monto;
+      const ven_actual = total_c * (1 - t_pago);
+      const a_staff = (staff * 2800) * 0.82; 
+      const rec_mora = ven_actual * 0.32; 
+      const a_com = c_proc_actual * 0.12; 
+
+      document.getElementById('res_inst').innerText = inst;
+      document.getElementById('res_total').innerText = `S/ ${total_c.toLocaleString()}`;
+      document.getElementById('res_tiempo').innerText = `S/ ${(total_c * t_pago).toLocaleString()}`;
+      document.getElementById('res_vencida').innerText = `S/ ${ven_actual.toLocaleString()}`;
+      document.getElementById('res_costo_p').innerText = `S/ ${(staff * 2800).toLocaleString()}`;
+      document.getElementById('res_ahorro_p').innerText = `S/ ${a_staff.toLocaleString()}`;
+      document.getElementById('res_vencida_actual').innerText = `S/ ${ven_actual.toLocaleString()}`;
+      document.getElementById('res_recupero_mora').innerText = `S/ ${rec_mora.toLocaleString()}`;
+      document.getElementById('res_costo_proc_actual').innerText = `S/ ${c_proc_actual.toLocaleString()}`;
+      document.getElementById('res_ahorro_comision').innerText = `S/ ${a_com.toLocaleString()}`;
+      document.getElementById('res_final').innerText = `S/ ${(a_staff + rec_mora + a_com).toLocaleString()}`;
+      document.getElementById('res_score').innerText = Math.max(10, Math.round(t_pago * 100 - (staff * 3)));
+    }
+
+    function enviarDatosAriel() {
+      const urlGoogle = "https://script.google.com/macros/s/AKfycbyi8UaU55Wb09i128M6uO90n1fX1R8x-23V4z8B5p1_10L-1-8/exec"; 
+      
+      // Capturar Métodos de Pago (Paso 3)
+      let metodos = [];
+      document.querySelectorAll('#step-3 .method-card').forEach(card => {
+        if(card.querySelector('input[type="checkbox"]').checked) {
+          metodos.push(card.querySelector('label').innerText.trim());
+        }
+      });
+
+      // Capturar Conciliación (Paso 4)
+      const concil = document.querySelector('input[name="concil"]:checked')?.parentElement.innerText.trim() || "No marcado";
+
+      // Capturar Visibilidad (Paso 6)
+      const visi = document.querySelector('input[name="vis"]:checked')?.parentElement.innerText.trim() || "No marcado";
+
+      // Capturar Experiencia del Alumno (Paso 7 - Checkboxes)
+      let experiencia = [];
+      document.querySelectorAll('#step-7 input[type="checkbox"]').forEach(check => {
+        if(check.checked) {
+          experiencia.push(check.parentElement.innerText.trim());
+        }
+      });
+
+      const datos = {
+        nombre: document.getElementById('nombre').value,
+        apellido: document.getElementById('apellido').value,
+        institucion: document.getElementById('institucion').value,
+        email: document.getElementById('email').value,
+        telefono: document.getElementById('telefono').value,
+        transacciones: document.getElementById('trans_mes').value,
+        monto_promedio: document.getElementById('monto_prom').value,
+        pago_a_tiempo: document.getElementById('moraInput').value + "%",
+        staff: document.getElementById('staff_count').value,
+        metodos_pago: metodos.length > 0 ? metodos.join(", ") : "Ninguno seleccionado",
+        conciliacion: concil,
+        visibilidad: visi,
+        experiencia_alumno: experiencia.length > 0 ? experiencia.join(", ") : "Ninguna herramienta activada",
+        score: document.getElementById('res_score').innerText,
+        ahorro_estimado: document.getElementById('res_final').innerText,
+        costo_personal: document.getElementById('res_costo_p').innerText,
+        costo_comisiones: document.getElementById('res_costo_proc_actual').innerText
+      };
+
+      fetch(urlGoogle, {
+        method: 'POST',
+        mode: 'no-cors',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(datos)
+      }).then(() => {
+        console.log("Diagnóstico 100% completo enviado a Ariel.");
+      });
+    }
+  </script>
+</body>
+</html>
