@@ -347,24 +347,62 @@
       document.getElementById('res_final').innerText = `S/ ${(a_staff + rec_mora + a_com).toLocaleString()}`;
       document.getElementById('res_score').innerText = Math.max(10, Math.round(t_pago * 100 - (staff * 3)));
     }
-function enviarDatosAriel() {
-  // Aquí ya puse tu llave de la imagen
+    function enviarDatosAriel() {
   const accessKey = "a936f3c6-21c8-4b40-b71b-642a57e0dae7"; 
 
-  // Capturamos los datos del formulario
+  // 1. Capturar Métodos de Pago (Paso 3)
+  let metodos = [];
+  document.querySelectorAll('#step-3 .method-card').forEach(card => {
+    if(card.querySelector('input[type="checkbox"]').checked) {
+      metodos.push(card.querySelector('label').innerText.trim());
+    }
+  });
+
+  // 2. Capturar Conciliación (Paso 4)
+  const concil = document.querySelector('input[name="concil"]:checked')?.parentElement.innerText.trim() || "No marcado";
+
+  // 3. Capturar Visibilidad (Paso 6)
+  const visi = document.querySelector('input[name="vis"]:checked')?.parentElement.innerText.trim() || "No marcado";
+
+  // 4. Capturar Experiencia del Alumno (Paso 7)
+  let experiencia = [];
+  document.querySelectorAll('#step-7 input[type="checkbox"]').forEach(check => {
+    if(check.checked) {
+      experiencia.push(check.parentElement.innerText.trim());
+    }
+  });
+
+  // 5. Estructura Completa para tu reunión con el cliente
   const datos = {
     apikey: accessKey,
-    subject: "Nuevo Diagnóstico: " + (document.getElementById('institucion')?.value || "Institución"),
-    from_name: "Tromppo Calculadora",
-    nombre: (document.getElementById('nombre')?.value || "") + " " + (document.getElementById('apellido')?.value || ""),
+    subject: "DIAGNÓSTICO COMPLETO: " + (document.getElementById('institucion')?.value || "Nueva Institución"),
+    from_name: "Calculadora Tromppo",
+    
+    // Datos de contacto
+    cliente_nombre: (document.getElementById('nombre')?.value || "") + " " + (document.getElementById('apellido')?.value || ""),
     institucion: document.getElementById('institucion')?.value || "",
     email: document.getElementById('email')?.value || "",
     telefono: document.getElementById('telefono')?.value || "",
-    score: document.getElementById('res_score')?.innerText || "0",
-    ahorro_estimado: document.getElementById('res_final')?.innerText || "0"
+    
+    // Datos de operación
+    transacciones_mensuales: document.getElementById('trans_mes')?.value || "",
+    monto_promedio_pension: document.getElementById('monto_prom')?.value || "",
+    porcentaje_pago_a_tiempo: (document.getElementById('moraInput')?.value || "0") + "%",
+    personal_administrativo: document.getElementById('staff_count')?.value || "",
+    
+    // Análisis de problemas (Lo que necesitas para la reunión)
+    metodos_pago_actuales: metodos.length > 0 ? metodos.join(", ") : "Ninguno",
+    estado_conciliacion: concil,
+    visibilidad_flujo_caja: visi,
+    herramientas_alumno: experiencia.length > 0 ? experiencia.join(", ") : "Ninguna",
+    
+    // Resultados de la calculadora
+    score_digital: document.getElementById('res_score')?.innerText || "0",
+    ahorro_anual_estimado: document.getElementById('res_final')?.innerText || "0",
+    costo_personal_actual: document.getElementById('res_costo_p')?.innerText || "0",
+    costo_comisiones_actual: document.getElementById('res_costo_proc_actual')?.innerText || "0"
   };
 
-  // Esto envía el correo de verdad
   fetch("https://api.web3forms.com/submit", {
     method: "POST",
     headers: { "Content-Type": "application/json", "Accept": "application/json" },
@@ -372,12 +410,11 @@ function enviarDatosAriel() {
   })
   .then(response => {
     if (response.ok) {
-      console.log("¡Correo enviado!");
+      console.log("Diagnóstico completo enviado.");
     }
   })
   .catch(error => console.log("Error:", error));
 }
-    
   </script>
 </body>
 </html>
