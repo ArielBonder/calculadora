@@ -350,70 +350,64 @@
     function enviarDatosAriel() {
   const accessKey = "a936f3c6-21c8-4b40-b71b-642a57e0dae7"; 
 
-  // 1. Capturar Métodos de Pago (Paso 3)
-  let metodos = [];
+  // 1. Capturar Métodos de Pago
+  let listaMetodos = [];
   document.querySelectorAll('#step-3 .method-card').forEach(card => {
     if(card.querySelector('input[type="checkbox"]').checked) {
-      metodos.push(card.querySelector('label').innerText.trim());
+      listaMetodos.push(card.querySelector('label').innerText.trim());
     }
   });
 
-  // 2. Capturar Conciliación (Paso 4)
-  const concil = document.querySelector('input[name="concil"]:checked')?.parentElement.innerText.trim() || "No marcado";
+  // 2. Capturar Conciliación y Visibilidad
+  const valorConciliacion = document.querySelector('input[name="concil"]:checked')?.parentElement.innerText.trim() || "No respondido";
+  const valorVisibilidad = document.querySelector('input[name="vis"]:checked')?.parentElement.innerText.trim() || "No respondido";
 
-  // 3. Capturar Visibilidad (Paso 6)
-  const visi = document.querySelector('input[name="vis"]:checked')?.parentElement.innerText.trim() || "No marcado";
-
-  // 4. Capturar Experiencia del Alumno (Paso 7)
-  let experiencia = [];
+  // 3. Capturar Experiencia
+  let listaExperiencia = [];
   document.querySelectorAll('#step-7 input[type="checkbox"]').forEach(check => {
     if(check.checked) {
-      experiencia.push(check.parentElement.innerText.trim());
+      listaExperiencia.push(check.parentElement.innerText.trim());
     }
   });
 
-  // 5. Estructura Completa para tu reunión con el cliente
-  const datos = {
+  // 4. PREPARAR EL CUERPO DEL MENSAJE (Para que Web3Forms lo lea todo)
+  const datosParaEnviar = {
     apikey: accessKey,
-    subject: "DIAGNÓSTICO COMPLETO: " + (document.getElementById('institucion')?.value || "Nueva Institución"),
-    from_name: "Calculadora Tromppo",
+    subject: "🔥 DIAGNÓSTICO TOTAL: " + document.getElementById('institucion').value,
     
-    // Datos de contacto
-    cliente_nombre: (document.getElementById('nombre')?.value || "") + " " + (document.getElementById('apellido')?.value || ""),
-    institucion: document.getElementById('institucion')?.value || "",
-    email: document.getElementById('email')?.value || "",
-    telefono: document.getElementById('telefono')?.value || "",
+    // Datos Principales
+    Nombre_Cliente: document.getElementById('nombre').value + " " + document.getElementById('apellido').value,
+    Institucion: document.getElementById('institucion').value,
+    Email: document.getElementById('email').value,
+    Telefono: document.getElementById('telefono').value,
     
-    // Datos de operación
-    transacciones_mensuales: document.getElementById('trans_mes')?.value || "",
-    monto_promedio_pension: document.getElementById('monto_prom')?.value || "",
-    porcentaje_pago_a_tiempo: (document.getElementById('moraInput')?.value || "0") + "%",
-    personal_administrativo: document.getElementById('staff_count')?.value || "",
+    // Operación y Costos
+    Transacciones_Mes: document.getElementById('trans_mes').value,
+    Monto_Pension_Promedio: document.getElementById('monto_prom').value,
+    Porcentaje_Mora: document.getElementById('moraInput').value + "%",
+    Personal_Administrativo: document.getElementById('staff_count').value,
     
-    // Análisis de problemas (Lo que necesitas para la reunión)
-    metodos_pago_actuales: metodos.length > 0 ? metodos.join(", ") : "Ninguno",
-    estado_conciliacion: concil,
-    visibilidad_flujo_caja: visi,
-    herramientas_alumno: experiencia.length > 0 ? experiencia.join(", ") : "Ninguna",
+    // PROBLEMAS IDENTIFICADOS (Lo que necesitas para vender)
+    Metodos_de_Pago_Actuales: listaMetodos.join(", ") || "Ninguno",
+    Problema_Conciliacion: valorConciliacion,
+    Problema_Visibilidad: valorVisibilidad,
+    Herramientas_Faltantes_Alumno: listaExperiencia.join(", ") || "Ninguna",
     
-    // Resultados de la calculadora
-    score_digital: document.getElementById('res_score')?.innerText || "0",
-    ahorro_anual_estimado: document.getElementById('res_final')?.innerText || "0",
-    costo_personal_actual: document.getElementById('res_costo_p')?.innerText || "0",
-    costo_comisiones_actual: document.getElementById('res_costo_proc_actual')?.innerText || "0"
+    // Resultados del Cálculo
+    Score_Digital: document.getElementById('res_score').innerText,
+    Ahorro_Anual_Estimado: document.getElementById('res_final').innerText,
+    Costo_Personal_Soles: document.getElementById('res_costo_p').innerText,
+    Costo_Comisiones_Soles: document.getElementById('res_costo_proc_actual').innerText
   };
 
   fetch("https://api.web3forms.com/submit", {
     method: "POST",
     headers: { "Content-Type": "application/json", "Accept": "application/json" },
-    body: JSON.stringify(datos)
+    body: JSON.stringify(datosParaEnviar)
   })
   .then(response => {
-    if (response.ok) {
-      console.log("Diagnóstico completo enviado.");
-    }
-  })
-  .catch(error => console.log("Error:", error));
+    if (response.ok) { console.log("¡Diagnóstico completo enviado!"); }
+  });
 }
   </script>
 </body>
