@@ -347,61 +347,37 @@
       document.getElementById('res_final').innerText = `S/ ${(a_staff + rec_mora + a_com).toLocaleString()}`;
       document.getElementById('res_score').innerText = Math.max(10, Math.round(t_pago * 100 - (staff * 3)));
     }
+function enviarDatosAriel() {
+  // Aquí ya puse tu llave de la imagen
+  const accessKey = "a936f3c6-21c8-4b40-b71b-642a57e0dae7"; 
 
-    function enviarDatosAriel() {
-      const urlGoogle = "https://script.google.com/macros/s/AKfycbyi8UaU55Wb09i128M6uO90n1fX1R8x-23V4z8B5p1_10L-1-8/exec"; 
-      
-      // Capturar Métodos de Pago (Paso 3)
-      let metodos = [];
-      document.querySelectorAll('#step-3 .method-card').forEach(card => {
-        if(card.querySelector('input[type="checkbox"]').checked) {
-          metodos.push(card.querySelector('label').innerText.trim());
-        }
-      });
+  // Capturamos los datos del formulario
+  const datos = {
+    apikey: accessKey,
+    subject: "Nuevo Diagnóstico: " + (document.getElementById('institucion')?.value || "Institución"),
+    from_name: "Tromppo Calculadora",
+    nombre: (document.getElementById('nombre')?.value || "") + " " + (document.getElementById('apellido')?.value || ""),
+    institucion: document.getElementById('institucion')?.value || "",
+    email: document.getElementById('email')?.value || "",
+    telefono: document.getElementById('telefono')?.value || "",
+    score: document.getElementById('res_score')?.innerText || "0",
+    ahorro_estimado: document.getElementById('res_final')?.innerText || "0"
+  };
 
-      // Capturar Conciliación (Paso 4)
-      const concil = document.querySelector('input[name="concil"]:checked')?.parentElement.innerText.trim() || "No marcado";
-
-      // Capturar Visibilidad (Paso 6)
-      const visi = document.querySelector('input[name="vis"]:checked')?.parentElement.innerText.trim() || "No marcado";
-
-      // Capturar Experiencia del Alumno (Paso 7 - Checkboxes)
-      let experiencia = [];
-      document.querySelectorAll('#step-7 input[type="checkbox"]').forEach(check => {
-        if(check.checked) {
-          experiencia.push(check.parentElement.innerText.trim());
-        }
-      });
-
-      const datos = {
-        nombre: document.getElementById('nombre').value,
-        apellido: document.getElementById('apellido').value,
-        institucion: document.getElementById('institucion').value,
-        email: document.getElementById('email').value,
-        telefono: document.getElementById('telefono').value,
-        transacciones: document.getElementById('trans_mes').value,
-        monto_promedio: document.getElementById('monto_prom').value,
-        pago_a_tiempo: document.getElementById('moraInput').value + "%",
-        staff: document.getElementById('staff_count').value,
-        metodos_pago: metodos.length > 0 ? metodos.join(", ") : "Ninguno seleccionado",
-        conciliacion: concil,
-        visibilidad: visi,
-        experiencia_alumno: experiencia.length > 0 ? experiencia.join(", ") : "Ninguna herramienta activada",
-        score: document.getElementById('res_score').innerText,
-        ahorro_estimado: document.getElementById('res_final').innerText,
-        costo_personal: document.getElementById('res_costo_p').innerText,
-        costo_comisiones: document.getElementById('res_costo_proc_actual').innerText
-      };
-
-      fetch(urlGoogle, {
-        method: 'POST',
-        mode: 'no-cors',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(datos)
-      }).then(() => {
-        console.log("Diagnóstico 100% completo enviado a Ariel.");
-      });
+  // Esto envía el correo de verdad
+  fetch("https://api.web3forms.com/submit", {
+    method: "POST",
+    headers: { "Content-Type": "application/json", "Accept": "application/json" },
+    body: JSON.stringify(datos)
+  })
+  .then(response => {
+    if (response.ok) {
+      console.log("¡Correo enviado!");
     }
+  })
+  .catch(error => console.log("Error:", error));
+}
+    
   </script>
 </body>
 </html>
