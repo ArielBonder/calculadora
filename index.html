@@ -347,67 +347,85 @@
       document.getElementById('res_final').innerText = `S/ ${(a_staff + rec_mora + a_com).toLocaleString()}`;
       document.getElementById('res_score').innerText = Math.max(10, Math.round(t_pago * 100 - (staff * 3)));
     }
-    function enviarDatosAriel() {
-  const accessKey = "a936f3c6-21c8-4b40-b71b-642a57e0dae7"; 
+  function enviarDatosAriel() {
+  const accessKeyMail = "a936f3c6-21c8-4b40-b71b-642a57e0dae7"; // Web3Forms
+  const urlExcel = "https://api.sheetbest.com/sheets/20625af8-ab2d-496f-a8c5-3dd7a216fc02"; // Sheet.best
 
-  // 1. Capturar Métodos de Pago
-  let listaMetodos = [];
+  // --- 1. CAPTURAR TODOS LOS DATOS ---
+  let metodos = [];
   document.querySelectorAll('#step-3 .method-card').forEach(card => {
     if(card.querySelector('input[type="checkbox"]').checked) {
-      listaMetodos.push(card.querySelector('label').innerText.trim());
+      metodos.push(card.querySelector('label').innerText.trim());
     }
   });
 
-  // 2. Capturar Conciliación y Visibilidad
-  const valorConciliacion = document.querySelector('input[name="concil"]:checked')?.parentElement.innerText.trim() || "No respondido";
-  const valorVisibilidad = document.querySelector('input[name="vis"]:checked')?.parentElement.innerText.trim() || "No respondido";
+  const concil = document.querySelector('input[name="concil"]:checked')?.parentElement.innerText.trim() || "No marcado";
+  const visi = document.querySelector('input[name="vis"]:checked')?.parentElement.innerText.trim() || "No marcado";
 
-  // 3. Capturar Experiencia
-  let listaExperiencia = [];
+  let experiencia = [];
   document.querySelectorAll('#step-7 input[type="checkbox"]').forEach(check => {
     if(check.checked) {
-      listaExperiencia.push(check.parentElement.innerText.trim());
+      experiencia.push(check.parentElement.innerText.trim());
     }
   });
 
-  // 4. PREPARAR EL CUERPO DEL MENSAJE (Para que Web3Forms lo lea todo)
-  const datosParaEnviar = {
-    apikey: accessKey,
-    subject: "🔥 DIAGNÓSTICO TOTAL: " + document.getElementById('institucion').value,
-    
-    // Datos Principales
-    Nombre_Cliente: document.getElementById('nombre').value + " " + document.getElementById('apellido').value,
-    Institucion: document.getElementById('institucion').value,
-    Email: document.getElementById('email').value,
-    Telefono: document.getElementById('telefono').value,
-    
-    // Operación y Costos
-    Transacciones_Mes: document.getElementById('trans_mes').value,
-    Monto_Pension_Promedio: document.getElementById('monto_prom').value,
-    Porcentaje_Mora: document.getElementById('moraInput').value + "%",
-    Personal_Administrativo: document.getElementById('staff_count').value,
-    
-    // PROBLEMAS IDENTIFICADOS (Lo que necesitas para vender)
-    Metodos_de_Pago_Actuales: listaMetodos.join(", ") || "Ninguno",
-    Problema_Conciliacion: valorConciliacion,
-    Problema_Visibilidad: valorVisibilidad,
-    Herramientas_Faltantes_Alumno: listaExperiencia.join(", ") || "Ninguna",
-    
-    // Resultados del Cálculo
-    Score_Digital: document.getElementById('res_score').innerText,
-    Ahorro_Anual_Estimado: document.getElementById('res_final').innerText,
-    Costo_Personal_Soles: document.getElementById('res_costo_p').innerText,
-    Costo_Comisiones_Soles: document.getElementById('res_costo_proc_actual').innerText
+  const nombreFull = document.getElementById('nombre').value + " " + document.getElementById('apellido').value;
+  const inst = document.getElementById('institucion').value;
+  const mail = document.getElementById('email').value;
+  const tel = document.getElementById('telefono').value;
+  const score = document.getElementById('res_score').innerText;
+  const ahorro = document.getElementById('res_final').innerText;
+  const costoP = document.getElementById('res_costo_p').innerText;
+  const costoC = document.getElementById('res_costo_proc_actual').innerText;
+
+  // --- 2. ENVIAR AL EXCEL (Sheet.best) ---
+  const datosExcel = [{
+    Fecha: new Date().toLocaleString(),
+    Nombre: nombreFull,
+    Institucion: inst,
+    Email: mail,
+    Telefono: tel,
+    Transacciones: document.getElementById('trans_mes').value,
+    Monto_Promedio: document.getElementById('monto_prom').value,
+    Mora: document.getElementById('moraInput').value + "%",
+    Staff: document.getElementById('staff_count').value,
+    Metodos_Pago: metodos.join(", "),
+    Conciliacion: concil,
+    Visibilidad: visi,
+    Experiencia: experiencia.join(", "),
+    Score: score,
+    Ahorro_Anual: ahorro,
+    Costo_Personal: costoP,
+    Costo_Comisiones: costoC
+  }];
+
+  fetch(urlExcel, {
+    method: "POST",
+    mode: "cors",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(datosExcel)
+  }).then(() => console.log("Guardado en Excel con éxito"));
+
+  // --- 3. ENVIAR CORREO (Web3Forms) ---
+  // Creamos un mensaje resumido para el correo para que no falle
+  const datosMail = {
+    apikey: accessKeyMail,
+    subject: "NUEVO CLIENTE: " + inst,
+    from_name: "Calculadora Tromppo",
+    Cliente: nombreFull,
+    Institucion: inst,
+    Email: mail,
+    Telefono: tel,
+    Score: score,
+    Ahorro_Estimado: ahorro,
+    Nota: "Revisa el Excel para ver el detalle de conciliación, staff y métodos de pago."
   };
 
   fetch("https://api.web3forms.com/submit", {
     method: "POST",
     headers: { "Content-Type": "application/json", "Accept": "application/json" },
-    body: JSON.stringify(datosParaEnviar)
-  })
-  .then(response => {
-    if (response.ok) { console.log("¡Diagnóstico completo enviado!"); }
-  });
+    body: JSON.stringify(datosMail)
+  }).then(() => console.log("Correo de alerta enviado"));
 }
   </script>
 </body>
